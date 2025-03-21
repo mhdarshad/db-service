@@ -122,22 +122,27 @@ class MySQLService extends DatabaseService {
         return rows;
     }
 
-    async transaction(actions: TransactionAction[]): Promise<boolean> {
-        const connection: PoolConnection = await this.pool.getConnection();
-        await connection.beginTransaction();
-        try {
-            for (const action of actions) {
+async transaction(actions: TransactionAction[]): Promise<boolean> {
+    const connection: PoolConnection = await this.pool.getConnection();
+    await connection.beginTransaction();
+    try {
+        for (const action of actions) {
+            if (action.method === "softDelete") {
+                await this.softDelete(action.conditions!, "isDeleted");
+            } else {
                 await this[action.method](action.data!, action.conditions!);
             }
-            await connection.commit();
-            return true;
-        } catch (error) {
-            await connection.rollback();
-            throw error;
-        } finally {
-            connection.release();
         }
+        await connection.commit();
+        return true;
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    } finally {
+        connection.release();
     }
+}
+
 }
 
 export default MySQLService;
