@@ -2,10 +2,11 @@ import mysql, { Pool, PoolConnection, RowDataPacket, ResultSetHeader } from "mys
 import DatabaseService from "./DatabaseService";
 
 interface TransactionAction {
-    method: "create" | "update" | "delete" | "increment";
+    method: "create" | "update" | "delete" | "increment" | "softDelete";
     data?: Record<string, any>;
     conditions?: Record<string, any>;
 }
+
 
 class MySQLService extends DatabaseService {
     private pool: Pool;
@@ -121,14 +122,13 @@ class MySQLService extends DatabaseService {
         const [rows] = await this.pool.execute<RowDataPacket[]>(sql, values);
         return rows;
     }
-
 async transaction(actions: TransactionAction[]): Promise<boolean> {
     const connection: PoolConnection = await this.pool.getConnection();
     await connection.beginTransaction();
     try {
         for (const action of actions) {
             if (action.method === "softDelete") {
-                await this.softDelete(action.conditions!, "isDeleted");
+                await this.softDelete(action.conditions!, "isDeleted"); // Ensure second argument is passed
             } else {
                 await this[action.method](action.data!, action.conditions!);
             }
@@ -142,6 +142,7 @@ async transaction(actions: TransactionAction[]): Promise<boolean> {
         connection.release();
     }
 }
+
 
 }
 
