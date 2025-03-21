@@ -14,34 +14,34 @@ abstract class DatabaseService {
     // 🟢 Bulk Insert
     abstract bulkInsert(dataArray: Record<string, any>[]): Promise<any>;
 
-    // 🟢 Read/Fetch a single record by condition
-    abstract get(condition: Record<string, any>): Promise<any>;
+    // 🟢 Read/Fetch a single record by multiple conditions
+    abstract get(conditions: Record<string, any>): Promise<any>;
 
     // 🟢 Read multiple records with filtering, sorting, and pagination
     abstract getAll(
         conditions?: Record<string, any>,
-        sort?: Record<string, any>,
+        sort?: Record<string, "ASC" | "DESC">,
         limit?: number,
         offset?: number
     ): Promise<any[]>;
 
-    // 🟢 Update a record based on a condition
-    abstract update(data: Record<string, any>, condition: Record<string, any>): Promise<any>;
+    // 🟢 Update a record based on multiple conditions
+    abstract update(data: Record<string, any>, conditions: Record<string, any>): Promise<any>;
 
-    // 🟢 Increment/Decrement a field (e.g., increase wallet balance)
-    abstract increment(field: string, amount: number, condition: Record<string, any>): Promise<any>;
+    // 🟢 Increment/Decrement a field based on multiple conditions
+    abstract increment(field: string, amount: number, conditions: Record<string, any>): Promise<any>;
 
-    // 🟢 Delete a record based on condition
-    abstract delete(condition: Record<string, any>): Promise<any>;
+    // 🟢 Delete a record based on multiple conditions
+    abstract delete(conditions: Record<string, any>): Promise<any>;
 
     // 🟢 Soft Delete (Mark a record as deleted instead of removing it)
-    abstract softDelete(condition: Record<string, any>, deletedField?: string): Promise<any>;
+    abstract softDelete(conditions: Record<string, any>, deletedField?: string): Promise<any>;
 
-    // 🟢 Count records that match a condition
-    abstract count(condition: Record<string, any>): Promise<number>;
+    // 🟢 Count records that match multiple conditions
+    abstract count(conditions: Record<string, any>): Promise<number>;
 
-    // 🟢 Check if a record exists
-    abstract exists(condition: Record<string, any>): Promise<boolean>;
+    // 🟢 Check if a record exists based on multiple conditions
+    abstract exists(conditions: Record<string, any>): Promise<boolean>;
 
     // 🟢 Find records using advanced search (LIKE, FULL TEXT SEARCH, etc.)
     abstract search(query: string, fields: string[]): Promise<any[]>;
