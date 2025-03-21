@@ -125,9 +125,9 @@ class MySQLService extends DatabaseService {
         return this.update({ [deletedField]: true }, condition);
     }
 
-    async count(condition: Record<string, any>= {}): Promise<number> {
+    async count(conditions: Record<string, any>= {}): Promise<number> {
          let values: any[] = [];
-         const query = `SELECT COUNT(*) as count FROM ${this.tableName} `;
+         let query = `SELECT COUNT(*) as count FROM ${this.tableName} `;
         if (Object.keys(conditions).length) {
             const whereClauses = Object.keys(conditions)
                 .map((key) => `${key} = ?`)
