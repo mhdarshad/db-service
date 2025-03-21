@@ -125,12 +125,18 @@ class MySQLService extends DatabaseService {
         return this.update({ [deletedField]: true }, condition);
     }
 
-    async count(condition: Record<string, any>): Promise<number> {
-        const field = Object.keys(condition)[0];
-        const value = Object.values(condition)[0];
-        const query = `SELECT COUNT(*) as count FROM ${this.tableName} WHERE ${field} = ?`;
+    async count(condition: Record<string, any>= {}): Promise<number> {
+         let values: any[] = [];
+         const query = `SELECT COUNT(*) as count FROM ${this.tableName} `;
+        if (Object.keys(conditions).length) {
+            const whereClauses = Object.keys(conditions)
+                .map((key) => `${key} = ?`)
+                .join(" AND ");
+            query += ` WHERE ${whereClauses}`;
+            values = Object.values(conditions);
+        }
 
-        const [rows] = await this.pool.execute<RowDataPacket[]>(query, [value]);
+        const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
         return rows[0].count;
     }
 
