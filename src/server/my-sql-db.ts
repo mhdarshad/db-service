@@ -84,7 +84,7 @@ class MySQLService extends DatabaseService {
 
         query += ` LIMIT ? OFFSET ?`;
         values.push(limit, offset);
-        
+        console.log(query, values);
         const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
         return rows;
     }
