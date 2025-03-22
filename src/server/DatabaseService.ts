@@ -15,11 +15,11 @@ abstract class DatabaseService {
     abstract bulkInsert(dataArray: Record<string, any>[]): Promise<any>;
 
     // 🟢 Read/Fetch a single record by multiple conditions
-    abstract get(conditions: Record<string, any>): Promise<any>;
+    abstract get(condition: Record<string, any>): Promise<any>;
 
     // 🟢 Read multiple records with filtering, sorting, and pagination
     abstract getAll(
-        conditions?: Record<string, any>,
+        conditions: Record<string, any>,
         sort?: Record<string, "ASC" | "DESC">,
         limit?: number,
         offset?: number
