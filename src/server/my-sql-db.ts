@@ -105,7 +105,7 @@ class MySQLService extends DatabaseService {
 
             const [rows] = await this.pool.execute<RowDataPacket[]>(query, [value]);
            console.log(rows);
-            return rows.length>0 ? rows[0] : null;
+            return rows[0];
         });
     }
 
