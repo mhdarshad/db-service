@@ -98,15 +98,21 @@ class MySQLService extends DatabaseService {
 
     async get(condition: Record<string, any>): Promise<RowDataPacket | null> {
         this.validateData(condition);
-        return this.executeWithRetry(async () => {
-            const field = Object.keys(condition)[0];
-            const value = Object.values(condition)[0];
-            const query = `SELECT * FROM ${this.tableName} WHERE ${field} = ? LIMIT 1`;
+        let query = `SELECT * FROM ${this.tableName}`;
+        let values: any[] = [];
+        if (Object.keys(condition).length) {
+            const whereClauses = Object.keys(condition)
+                .map((key) => `${key} = ?`)
+                .join(" AND ");
+            query += ` WHERE ${whereClauses}`;
+            values = Object.values(condition);
+        }
 
-            const [rows] = await this.pool.execute<RowDataPacket[]>(query, [value]);
-           console.log(rows);
-            return rows[0];
-        });
+        query += ` LIMIT =1`;
+        // values.push(limit, offset);
+        const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
+        return rows.length ? rows[0] : null;
+        
     }
 
     async getAll(
