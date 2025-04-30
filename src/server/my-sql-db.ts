@@ -104,7 +104,8 @@ class MySQLService extends DatabaseService {
             const query = `SELECT * FROM ${this.tableName} WHERE ${field} = ? LIMIT 1`;
 
             const [rows] = await this.pool.execute<RowDataPacket[]>(query, [value]);
-            return rows.length ? rows[0] : null;
+           console.log(rows);
+            return rows.length>0 ? rows[0] : null;
         });
     }
 
